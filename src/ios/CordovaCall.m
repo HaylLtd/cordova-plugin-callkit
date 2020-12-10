@@ -15,6 +15,8 @@ NSMutableDictionary *callbackIds;
 NSDictionary* pendingCallFromRecents;
 BOOL monitorAudioRouteChange = NO;
 BOOL enableDTMF = NO;
+NSString* callbackUrl;
+NSString* connectionId;
 
 - (void)pluginInitialize
 {
@@ -591,6 +593,10 @@ BOOL enableDTMF = NO;
         NSError* error;
         // NSDictionary* json = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
         NSObject* caller = [data objectForKey:@"Caller"];
+        
+        callbackUrl = [caller valueForKey:@"CallbackUrl"];
+        connectionId = [caller valueForKey:@"ConnectionId"];
+        
         NSArray* args = [NSArray arrayWithObjects:[caller valueForKey:@"Username"], [caller valueForKey:@"ConnectionId"], nil];
         
         CDVInvokedUrlCommand* newCommand = [[CDVInvokedUrlCommand alloc] initWithArguments:args callbackId:@"" className:self.VoIPPushClassName methodName:self.VoIPPushMethodName];
