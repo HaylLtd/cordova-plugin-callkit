@@ -484,6 +484,27 @@ NSString* connectionId;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"answer event called successfully"];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+        
+        NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"2", @"status", connectionId, @"connectionId", nil];
+                NSError *error;
+                if ([NSJSONSerialization isValidJSONObject:dictionary]) {
+                    NSData *dataJson = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&error];
+
+                    NSURL *urlSite = [NSURL URLWithString:callbackUrl];
+
+                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlSite cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+                    [request setHTTPMethod:@"POST"];
+                    [request setValue:@"application/JSON" forHTTPHeaderField:@"Accept"];
+                    [request setValue:@"application/JSON" forHTTPHeaderField:@"Content-Type"];
+                    [request setValue:@"application/JSON" forHTTPHeaderField:@"Accept"];
+                    [request setValue:[NSString stringWithFormat:@"%lu", (unsigned long)[dataJson length]] forHTTPHeaderField:@"Content-Length"];
+                    [request setHTTPBody:dataJson];
+             
+                    NSURLResponse *response;
+                    NSError *err;
+
+                    NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&err];
+                }
     }
     //[action fail];
 }
@@ -499,7 +520,7 @@ NSString* connectionId;
                 [pluginResult setKeepCallbackAsBool:YES];
                 [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
             
-                NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"2", @"status", connectionId, @"connectionId", nil];
+                NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"0", @"status", connectionId, @"connectionId", nil];
                 NSError *error;
                 if ([NSJSONSerialization isValidJSONObject:dictionary]) {
                     NSData *dataJson = [NSJSONSerialization dataWithJSONObject:dictionary options:NSJSONWritingPrettyPrinted error:&error];
