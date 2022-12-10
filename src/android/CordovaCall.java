@@ -244,6 +244,17 @@ public class CordovaCall extends CordovaPlugin {
     }
 
     private void checkCallPermission() {
+        if(android.os.Build.VERSION.SDK_INT >= 31) {
+            String permission = Manifest.permission.READ_PHONE_NUMBERS;
+            int res = this.cordova.getActivity().getApplicationContext().checkCallingOrSelfPermission(
+                permission
+            );
+
+            if (res != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+        
         if(permissionCounter >= 1) {
             PhoneAccount currentPhoneAccount = tm.getPhoneAccount(handle);
             if(currentPhoneAccount.isEnabled()) {
