@@ -26,6 +26,8 @@ import java.util.HashMap;
 import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 
+import androidx.core.app.ActivityCompat;
+
 public class CordovaCall extends CordovaPlugin {
 
     private static String TAG = "CordovaCall";
@@ -239,6 +241,10 @@ public class CordovaCall extends CordovaPlugin {
               this.callbackContext.error("Call Failed. You need to enter a phone number.");
             }
             return true;
+        } else if (action.equals("requestPermission")) {
+            this.requestPermissionNumbers();
+            this.callbackContext.success("requestPermission");
+            return true;
         }
         return false;
     }
@@ -251,6 +257,7 @@ public class CordovaCall extends CordovaPlugin {
             );
 
             if (res != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissionNumbers();
                 return;
             }
         }
@@ -325,6 +332,14 @@ public class CordovaCall extends CordovaPlugin {
 
     protected void getCallPhonePermission() {
         cordova.requestPermission(this, CALL_PHONE_REQ_CODE, Manifest.permission.CALL_PHONE);
+    }
+
+    protected void requestPermissionNumbers() {
+        ActivityCompat.requestPermissions(
+            this.cordova.getActivity(), new String[] {
+                    Manifest.permission.READ_PHONE_NUMBERS
+            }, 0
+        );
     }
 
     protected void callNumberPhonePermission() {
