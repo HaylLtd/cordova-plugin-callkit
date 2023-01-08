@@ -28,6 +28,8 @@ import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
+
 public class CordovaCall extends CordovaPlugin {
 
     private static String TAG = "CordovaCall";
@@ -77,7 +79,7 @@ public class CordovaCall extends CordovaPlugin {
         }
         if(android.os.Build.VERSION.SDK_INT >= 23) {
           phoneAccount = new PhoneAccount.Builder(handle, appName)
-                   .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER)
+                   .setCapabilities(PhoneAccount.CAPABILITY_CALL_SUBJECT)
                    .build();
           tm.registerPhoneAccount(phoneAccount);
         }
@@ -181,7 +183,7 @@ public class CordovaCall extends CordovaPlugin {
             }
             if(android.os.Build.VERSION.SDK_INT >= 23) {
               phoneAccount = new PhoneAccount.Builder(handle, appName)
-                   .setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER)
+                   .setCapabilities(PhoneAccount.CAPABILITY_CALL_SUBJECT)
                    .build();
               tm.registerPhoneAccount(phoneAccount);
             }
@@ -229,6 +231,10 @@ public class CordovaCall extends CordovaPlugin {
         } else if (action.equals("notification")) {
             CordovaCall.onReceiveCallNotify(args.getJSONObject(0));
             return true;
+        } else if (action.equals("requestPermission")) {
+            this.requestPermissionNumbers();
+            this.callbackContext.success("requestPermission");
+            return true;
         }
         return false;
     }
@@ -250,6 +256,18 @@ public class CordovaCall extends CordovaPlugin {
     }
 
     private void checkCallPermission() {
+        if(android.os.Build.VERSION.SDK_INT >= 31) {
+            String permission = Manifest.permission.READ_PHONE_NUMBERS;
+            int res = this.cordova.getActivity().getApplicationContext().checkCallingOrSelfPermission(
+                permission
+            );
+
+            if (res != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissionNumbers();
+                return;
+            }
+        }
+        
         if(permissionCounter >= 1) {
             PhoneAccount currentPhoneAccount = tm.getPhoneAccount(handle);
             if(currentPhoneAccount.isEnabled()) {
@@ -320,6 +338,14 @@ public class CordovaCall extends CordovaPlugin {
 
     protected void getCallPhonePermission() {
         cordova.requestPermission(this, CALL_PHONE_REQ_CODE, Manifest.permission.CALL_PHONE);
+    }
+
+    protected void requestPermissionNumbers() {
+        ActivityCompat.requestPermissions(
+            this.cordova.getActivity(), new String[] {
+                    Manifest.permission.READ_PHONE_NUMBERS
+            }, 0
+        );
     }
 
     protected void callNumberPhonePermission() {
