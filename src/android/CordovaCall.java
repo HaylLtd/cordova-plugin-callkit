@@ -305,6 +305,13 @@ public class CordovaCall extends CordovaPlugin {
         callInfo.putParcelable(TelecomManager.EXTRA_OUTGOING_CALL_EXTRAS,callInfoBundle);
         callInfo.putParcelable(TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE, handle);
         callInfo.putBoolean(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, true);
+        if (ActivityCompat.checkSelfPermission(this.cordova.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+            this.cordova.getActivity(), new String[] {
+                    Manifest.permission.READ_PHONE_NUMBERS
+                    }, CALL_PHONE_REQ_CODE);
+            return;
+        }
         tm.placeCall(uri, callInfo);
         permissionCounter = 0;
         this.callbackContext.success("Outgoing call successful");
@@ -363,7 +370,7 @@ public class CordovaCall extends CordovaPlugin {
     }
 
     @Override
-    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
     {
         for(int r:grantResults)
         {
