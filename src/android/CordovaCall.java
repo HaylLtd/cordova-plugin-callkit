@@ -79,7 +79,8 @@ public class CordovaCall extends CordovaPlugin {
         tm = (TelecomManager) this.cordova.getActivity().getApplicationContext()
                 .getSystemService(Context.TELECOM_SERVICE);
         phoneAccount = new PhoneAccount.Builder(handle, appName)
-                .setCapabilities(PhoneAccount.CAPABILITY_SELF_MANAGED)
+                .setCapabilities(
+                        PhoneAccount.CAPABILITY_CALL_PROVIDER)
                 .build();
         tm.registerPhoneAccount(phoneAccount);
 
