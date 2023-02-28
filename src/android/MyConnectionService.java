@@ -35,7 +35,6 @@ public class MyConnectionService extends ConnectionService {
         final Connection connection = new Connection() {
             @Override
             public void onAnswer() {
-                this.setActive();
                 Intent intent = new Intent(CordovaCall.getCordova().getActivity().getApplicationContext(),
                         CordovaCall.getCordova().getActivity().getClass());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -75,7 +74,10 @@ public class MyConnectionService extends ConnectionService {
                 }
             }
         };
-        connection.setAddress(Uri.parse(request.getExtras().getString("from")), TelecomManager.PRESENTATION_ALLOWED);
+        connection.setConnectionCapabilities(Connection.CAPABILITY_SUPPORT_HOLD);
+        connection.setAudioModeIsVoip(true);
+        connection.setCallerDisplayName(Uri.parse(request.getExtras().getString("from")),
+                TelecomManager.PRESENTATION_ALLOWED);
         Icon icon = CordovaCall.getIcon();
         if (icon != null) {
             StatusHints statusHints = new StatusHints((CharSequence) "", icon, new Bundle());
@@ -147,7 +149,12 @@ public class MyConnectionService extends ConnectionService {
                 }
             }
         };
-        connection.setAddress(Uri.parse(request.getExtras().getString("to")), TelecomManager.PRESENTATION_ALLOWED);
+
+        connection.setConnectionCapabilities(Connection.CAPABILITY_SUPPORT_HOLD);
+        connection.setAudioModeIsVoip(true);
+        connection.setCallerDisplayName(Uri.parse(request.getExtras().getString("to")),
+                TelecomManager.PRESENTATION_ALLOWED);
+        connection.setVideoState(request.getVideoState());
         Icon icon = CordovaCall.getIcon();
         if (icon != null) {
             StatusHints statusHints = new StatusHints((CharSequence) "", icon, new Bundle());
@@ -168,4 +175,15 @@ public class MyConnectionService extends ConnectionService {
         }
         return connection;
     }
+
+    // @Override
+    // public void onShowIncomingCallUi() {
+    // Intent intent = new
+    // Intent(CordovaCall.getCordova().getActivity().getApplicationContext(),
+    // CordovaCall.getCordova().getActivity().getClass());
+    // intent.setFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION |
+    // Intent.FLAG_ACTIVITY_NEW_TASK);
+    // CordovaCall.getCordova().getActivity().getApplicationContext().startActivity(intent);
+    // }
+
 }

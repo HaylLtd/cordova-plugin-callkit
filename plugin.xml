@@ -1,7 +1,10 @@
-<?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-callkit" version="1.1.0" 
-    xmlns="http://apache.org/cordova/ns/plugins/1.0" 
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version='1.0' encoding='utf-8' ?>
+<plugin
+  id="cordova-plugin-callkit"
+  version="1.1.0"
+  xmlns="http://apache.org/cordova/ns/plugins/1.0"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+>
     <name>Cordova CallKit</name>
 
     <js-module name="VoIPPushNotification" src="www/VoIPPushNotification.js">
@@ -15,32 +18,54 @@
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">
         <feature name="CordovaCall">
-            <param name="android-package" value="com.dmarc.cordovacall.CordovaCall" />
+            <param
+          name="android-package"
+          value="com.dmarc.cordovacall.CordovaCall"
+        />
             <param name="onload" value="true" />
         </feature>
         </config-file>
         <config-file parent="/*" target="AndroidManifest.xml">
-            <uses-permission android:name="android.permission.BIND_TELECOM_CONNECTION_SERVICE"/>
-            <uses-permission android:name="android.permission.CALL_PHONE"/>
-            <uses-permission android:name="android.permission.MANAGE_OWN_CALLS"/>
+            <uses-permission
+        android:name="android.permission.BIND_TELECOM_CONNECTION_SERVICE"
+      />
+            <uses-permission android:name="android.permission.CALL_PHONE" />
+            <uses-permission
+        android:name="android.permission.MANAGE_OWN_CALLS"
+      />
             <!-- Grants the READ_PHONE_STATE permission only on devices that run
          Android 10 (API level 29) and lower. -->
-  <uses-permission android:name="android.permission.READ_PHONE_STATE"
-      android:maxSdkVersion="29" />
+  <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        android:maxSdkVersion="29"
+      />
   <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
   <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
         </config-file>
-        <config-file parent="/manifest/application" target="AndroidManifest.xml">
-            <service android:name="com.dmarc.cordovacall.MyConnectionService"
-                    android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE" android:exported="true">
+        <config-file
+      parent="/manifest/application"
+      target="AndroidManifest.xml"
+    >
+            <service
+        android:name="com.dmarc.cordovacall.MyConnectionService"
+        android:label="MyConnectionService"
+        android:permission="android.permission.BIND_TELECOM_CONNECTION_SERVICE"
+        android:exported="true"
+      >
                 <intent-filter>
                     <action android:name="android.telecom.ConnectionService" />
                 </intent-filter>
             </service>
         </config-file>
-        <source-file src="src/android/CordovaCall.java" target-dir="src/com/dmarc/cordovacall" />
-        <source-file src="src/android/MyConnectionService.java" target-dir="src/com/dmarc/cordovacall" />
+        <source-file
+      src="src/android/CordovaCall.java"
+      target-dir="src/com/dmarc/cordovacall"
+    />
+        <source-file
+      src="src/android/MyConnectionService.java"
+      target-dir="src/com/dmarc/cordovacall"
+    />
     </platform>
 
     <platform name="ios">
