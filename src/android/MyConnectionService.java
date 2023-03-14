@@ -76,7 +76,7 @@ public class MyConnectionService extends ConnectionService {
         };
         connection.setConnectionCapabilities(Connection.CAPABILITY_SUPPORT_HOLD);
         connection.setAudioModeIsVoip(true);
-        connection.setCallerDisplayName(Uri.parse(request.getExtras().getString("from")),
+        connection.setCallerDisplayName(request.getExtras().getString("from"),
                 TelecomManager.PRESENTATION_ALLOWED);
         Icon icon = CordovaCall.getIcon();
         if (icon != null) {
@@ -152,7 +152,7 @@ public class MyConnectionService extends ConnectionService {
 
         connection.setConnectionCapabilities(Connection.CAPABILITY_SUPPORT_HOLD);
         connection.setAudioModeIsVoip(true);
-        connection.setCallerDisplayName(Uri.parse(request.getExtras().getString("to")),
+        connection.setCallerDisplayName(request.getExtras().getString("to"),
                 TelecomManager.PRESENTATION_ALLOWED);
         connection.setVideoState(request.getVideoState());
         Icon icon = CordovaCall.getIcon();
